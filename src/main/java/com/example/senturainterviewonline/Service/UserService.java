@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-
+import java.util.Map;
 @Service
 public class UserService {
     @Autowired
@@ -92,19 +92,19 @@ public class UserService {
         String endpoint = APIURL + "/api/users/" + userId;
 
         try {
-            String jsonBody = objectMapper.writeValueAsString(userDTO);
+            String jsonBody = mapper.writeValueAsString(userDTO);
             RequestBody body = RequestBody.create(jsonBody, MediaType.parse("application/json"));
             Request request = new Request.Builder()
                     .url(endpoint)
                     .put(body)
-                    .addHeader("Authorization", "Bearer " + weavyApiToken)
+                    .addHeader("Authorization", "Bearer " + APIKEY)
                     .addHeader("Content-Type", "application/json")
                     .build();
 
             try (Response response = client.newCall(request).execute()) {
                 if (response.isSuccessful() && response.body() != null) {
                     String responseBody = response.body().string();
-                    return objectMapper.readValue(responseBody, UserDTO.class);
+                    return mapper.readValue(responseBody, UserDTO.class);
                 } else {
                     throw new RuntimeException("Failed to update user: " + response.message());
                 }
@@ -118,12 +118,12 @@ public class UserService {
 
 
     public void deleteUser(String userId) {
-        String endpoint = weavyApiUrl + "/api/users/" + userId+"/trash";
+        String endpoint = APIURL + "/api/users/" + userId+"/trash";
 
         Request request = new Request.Builder()
                 .url(endpoint)
                 .post(RequestBody.create(new byte[0]))
-                .addHeader("Authorization", "Bearer " + weavyApiToken)
+                .addHeader("Authorization", "Bearer " + APIKEY)
                 .build();
 
         try (Response response = client.newCall(request).execute()) {
@@ -136,19 +136,19 @@ public class UserService {
     }
 
     public Map<String, Object> listUsers(Map<String, String> queryParams) {
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(weavyApiUrl + "/api/users").newBuilder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(APIURL + "/api/users").newBuilder();
         queryParams.forEach(urlBuilder::addQueryParameter);
 
         Request request = new Request.Builder()
                 .url(urlBuilder.build())
                 .get()
-                .addHeader("Authorization", "Bearer " + weavyApiToken)
+                .addHeader("Authorization", "Bearer " + APIKEY)
                 .build();
 
         try (Response response = client.newCall(request).execute()) {
             if (response.isSuccessful() && response.body() != null) {
                 String responseBody = response.body().string();
-                return objectMapper.readValue(responseBody, Map.class);
+                return mapper.readValue(responseBody, Map.class);
             } else {
                 throw new RuntimeException("Failed to list users: " + response.message());
             }
