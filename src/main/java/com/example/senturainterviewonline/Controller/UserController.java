@@ -18,6 +18,7 @@ public class UserController {
     @PostMapping
     public ResponseEntity<UserDTO> saveUser(@RequestBody UserDTO userDTO){
         try{
+             userService.saveUser(userDTO);
             return new ResponseEntity<>(HttpStatus.CREATED);
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -28,6 +29,7 @@ public class UserController {
     @GetMapping("/{uid}")
     public ResponseEntity<UserDTO>getUser(@PathVariable String uid){
         try{
+            userService.getUser(uid);
             return new ResponseEntity<>(HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -37,7 +39,7 @@ public class UserController {
     @PutMapping("/{uid}")
     public ResponseEntity<UserDTO>updateUser(@PathVariable String uid ,@RequestBody UserDTO userDTO){
         try{
-
+            userService.updateUser(uid, userDTO);
             return new ResponseEntity<>(HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -47,7 +49,7 @@ public class UserController {
     @DeleteMapping("/{uid}")
     public ResponseEntity<Void>deleteUser(@PathVariable String uid){
         try{
-
+            userService.deleteUser(uid);
             return new ResponseEntity<>(HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

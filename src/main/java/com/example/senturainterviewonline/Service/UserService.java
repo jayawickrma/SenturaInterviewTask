@@ -62,11 +62,9 @@ public class UserService {
         }
     }
 
-    public UserDTO getUser(String userId, Boolean trashed) {
-        String endpoint = APIURL + "/api/users/" + userId;
-        if (trashed != null) {
-            endpoint += "?trashed=" + trashed;
-        }
+    public UserDTO getUser(String uid) {
+        String endpoint = APIURL + "/api/users/" + uid;
+
 
         Request request = new Request.Builder()
                 .url(endpoint)
