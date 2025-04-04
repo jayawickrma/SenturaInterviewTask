@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/v1/user")
 @AllArgsConstructor
@@ -54,5 +56,10 @@ public class UserController {
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+    @GetMapping
+    public ResponseEntity<Map<String, Object>> listUsers(@RequestParam Map<String, String> queryParams) {
+        Map<String, Object> users = userService.listUsers(queryParams);
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 }
