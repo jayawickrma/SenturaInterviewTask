@@ -57,9 +57,4 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @GetMapping
-    public ResponseEntity<Map<String, Object>> listUsers(@RequestParam Map<String, String> queryParams) {
-        Map<String, Object> users = userService.listUsers(queryParams);
-        return new ResponseEntity<>(users, HttpStatus.OK);
-    }
 }

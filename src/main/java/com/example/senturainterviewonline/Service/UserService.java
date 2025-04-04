@@ -133,27 +133,5 @@ public class UserService {
         }
     }
 
-    public Map<String, Object> listUsers(Map<String, String> queryParams) {
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(APIURL + "/api/users").newBuilder();
-        queryParams.forEach(urlBuilder::addQueryParameter);
 
-        Request request = new Request.Builder()
-                .url(urlBuilder.build())
-                .get()
-                .addHeader("Authorization", "Bearer " + APIKEY)
-                .build();
-
-        try (Response response = client.newCall(request).execute()) {
-            if (response.isSuccessful() && response.body() != null) {
-                String responseBody = response.body().string();
-                return mapper.readValue(responseBody, Map.class);
-            } else {
-                throw new RuntimeException("Failed to list users: " + response.message());
-            }
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("Error converting response to Map", e);
-        } catch (IOException e) {
-            throw new RuntimeException("Error making HTTP request to Weavy API", e);
-        }
-    }
 }
