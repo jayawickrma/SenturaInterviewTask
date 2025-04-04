@@ -7,11 +7,15 @@ import okhttp3.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Map;
 @Service
 public class UserService {
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+
     @Autowired
     private OkHttpClient client;
 
@@ -47,16 +51,16 @@ public class UserService {
                     String responseBody = response.body().string();
                     return mapper.readValue(responseBody, UserDTO.class);
                 } else {
-                    System.out.println("Failed to save user: " + response.message());
+                    logger.error("Failed to save user: {}", response.message());
                     throw new RuntimeException("Failed to save user: " + response);
                 }
             }
         } catch (JsonProcessingException e) {
-            System.out.println("Error converting user to JSON");
+            logger.error("Error converting user to JSON", e);
             e.printStackTrace();
             throw new RuntimeException("Error converting user to JSON", e);
         } catch (IOException e) {
-            System.out.println("Error making HTTP request to Weavy API");
+            logger.error("Error making HTTP request to Weavy API", e);
             e.printStackTrace();
             throw new RuntimeException("Error making HTTP request to Weavy API", e);
         }
@@ -132,6 +136,4 @@ public class UserService {
             throw new RuntimeException("Error making HTTP request to Weavy API", e);
         }
     }
-
-
 }
